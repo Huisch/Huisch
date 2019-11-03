@@ -2,8 +2,8 @@
 
 namespace App\Controller\Bot;
 
+use App\HuischTelegram;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Telegram;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +27,7 @@ class WebhookController extends AbstractController {
 		}
 
 		try {
-			$telegram = new Telegram($key, $username);
+			$telegram = new HuischTelegram($key, $username);
 			$telegram->addCommandsPath($kernel->getProjectDir() . "/src/TelegramCommands");
 
 			$result = $telegram->handle();
