@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class WebhookController extends AbstractController {
@@ -15,9 +16,10 @@ class WebhookController extends AbstractController {
 	 * @Route("/bot/{token}/webhook", name="bot_webhook")
 	 * @param LoggerInterface $logger
 	 * @param string $token
+	 * @param KernelInterface $kernel
 	 * @return JsonResponse
 	 */
-	public function webhook(LoggerInterface $logger, string $token) {
+	public function webhook(LoggerInterface $logger, string $token, KernelInterface $kernel) {
 		$key = $this->getParameter('telegram.api-key');
 		$username = $this->getParameter('telegram.username');
 		if ($key !== $token) {
@@ -26,7 +28,7 @@ class WebhookController extends AbstractController {
 
 		try {
 			$telegram = new Telegram($key, $username);
-			$telegram->addCommandsPath($this->get('kernel')->getProjectDir() . "/src/TelegramCommands");
+			$telegram->addCommandsPath($kernel->getProjectDir() . "/src/TelegramCommands");
 
 			$result = $telegram->handle();
 			return $this->json($result);
