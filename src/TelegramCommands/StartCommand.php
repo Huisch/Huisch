@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TelegramCommands;
+namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;

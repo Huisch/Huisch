@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TelegramCommands;
+namespace Longman\TelegramBot\Commands\UserCommands;
 
 use App\Repository\HouseRepository;
 use Doctrine\ORM\EntityManagerInterface;
