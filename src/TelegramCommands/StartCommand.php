@@ -2,7 +2,7 @@
 
 namespace App\TelegramCommands;
 
-use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
@@ -10,7 +10,7 @@ use Longman\TelegramBot\Request;
 /**
  * Start command
  */
-class StartCommand extends UserCommand
+class StartCommand extends SystemCommand
 {
     /**
      * @var string
@@ -45,7 +45,7 @@ class StartCommand extends UserCommand
 
         return Request::sendMessage([
 			'chat_id' => $chat_id,
-			'text' => "Welkom! Voeg me toe aan een groepsapp om me te gebruiken."
+			'text' => "Welkom! Voeg me toe aan een groep om me te gebruiken."
 		]);
     }
 }
