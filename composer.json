@@ -69,6 +69,10 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "rollout": [
+            "@composer install",
+            "php bin/console doctrine:migrations:migrate -n"
         ]
     },
     "conflict": {
