@@ -3,6 +3,7 @@
 namespace App\Controller\Bot;
 
 use App\HuischTelegram;
+use Doctrine\ORM\EntityManagerInterface;
 use Longman\TelegramBot\Exception\TelegramException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,9 +18,10 @@ class WebhookController extends AbstractController {
 	 * @param LoggerInterface $logger
 	 * @param string $token
 	 * @param KernelInterface $kernel
+	 * @param EntityManagerInterface $em
 	 * @return JsonResponse
 	 */
-	public function webhook(LoggerInterface $logger, string $token, KernelInterface $kernel) {
+	public function webhook(LoggerInterface $logger, string $token, KernelInterface $kernel, EntityManagerInterface $em) {
 		$key = $this->getParameter('telegram.api-key');
 		$username = $this->getParameter('telegram.username');
 		if ($key !== $token) {
@@ -27,7 +29,7 @@ class WebhookController extends AbstractController {
 		}
 
 		try {
-			$telegram = new HuischTelegram($key, $username);
+			$telegram = new HuischTelegram($key, $username, $em);
 			$telegram->addCommandsPath($kernel->getProjectDir() . "/src/TelegramCommands");
 
 			$result = $telegram->handle();
