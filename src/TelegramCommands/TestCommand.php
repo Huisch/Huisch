@@ -2,7 +2,7 @@
 
 namespace App\TelegramCommands;
 
-use App\Repository\HouseRepository;
+use App\Entity\House;
 use Doctrine\ORM\EntityManagerInterface;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
@@ -30,7 +30,7 @@ class TestCommand extends UserCommand {
 	 * @throws TelegramException
 	 */
 	public function execute() {
-		$houseRepo = $this->em->getRepository(HouseRepository::class);
+		$houseRepo = $this->em->getRepository(House::class);
 		$count = count($houseRepo->findAll());
 
 		$message = $this->getMessage();
