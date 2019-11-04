@@ -9,7 +9,7 @@ use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Telegram;
 
-class BewonersCommand extends UserCommand {
+class BewonersCommand extends UserCommand implements HuischCommandInterface {
 	protected $name = 'bewoners';
     protected $description = 'Geeft een lijst van huidige bewoners.';
     protected $usage = '/bewoners';
@@ -32,5 +32,9 @@ class BewonersCommand extends UserCommand {
 			return $this->replyToChat("Dit commando kan alleen in groepen gebruikt worden.");
 		}
 		return $this->getTelegram()->executeCommand('start');
+	}
+
+	public function showWhen(bool $group) {
+		return $group;
 	}
 }

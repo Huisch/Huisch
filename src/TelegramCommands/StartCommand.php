@@ -16,7 +16,7 @@ use Longman\TelegramBot\Telegram;
 /**
  * Start command
  */
-class StartCommand extends SystemCommand {
+class StartCommand extends SystemCommand implements HuischCommandInterface {
 	protected $name = 'start';
 	protected $description = 'Start command';
 	protected $usage = '/start';
@@ -54,5 +54,14 @@ class StartCommand extends SystemCommand {
 				return $resident->sendMessage("Je bent nu actief in {$resident->getHouse()->getName()}.");
 			}
 		}
+	}
+
+	/**
+	 * Show in help when current environment is group or not.
+	 * @param bool $group
+	 * @return bool
+	 */
+	public function showWhen(bool $group) {
+		return true;
 	}
 }
