@@ -3,8 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\House;
+use App\Exception\InternalHuischException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * @method House|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,39 +16,39 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method House[]    findAll()
  * @method House[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class HouseRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, House::class);
-    }
+class HouseRepository extends ServiceEntityRepository {
+	public function __construct(ManagerRegistry $registry) {
+		parent::__construct($registry, House::class);
+	}
 
-    // /**
-    //  * @return House[] Returns an array of House objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('h.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+	/**
+	 * @param Chat $chat
+	 * @return House
+	 * @throws InternalHuischException
+	 * @throws TelegramException
+	 */
+	public function findByChat(Chat $chat) {
+		if (!$chat->isGroupChat()) throw new InternalHuischException("Chat is not a group");
+		$house = $this->findOneBy(['chatID' => $chat->getId()]);
+		if (!$house) {
+			$house = $this->createFromChat($chat);
+			$house->sendMessage("Hoera! {$house->getName()} is nu geregistreerd in Huisch!");
+		}
+		return $house;
+	}
 
-    /*
-    public function findOneBySomeField($value): ?House
-    {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+	/**
+	 * @param Chat $chat
+	 * @return House
+	 * @throws InternalHuischException
+	 */
+	private function createFromChat(Chat $chat) {
+		if (!$chat->isGroupChat()) throw new InternalHuischException("Chat is not a group");
+		$house = new House($chat->getTitle(), $chat->getId());
+		/** @var EntityManagerInterface $entityManager */
+		$entityManager = $this->getEntityManager();
+		$entityManager->persist($house);
+		$entityManager->flush();
+		return $house;
+	}
 }
