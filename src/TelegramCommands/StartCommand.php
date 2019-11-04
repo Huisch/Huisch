@@ -42,7 +42,7 @@ class StartCommand extends SystemCommand {
 		if ($chat->isGroupChat()) {
 			$house = $this->em->getRepository(House::class)->findByChat($chat);
 			$this->em->getRepository(Resident::class)->findByHouseAndUser($house, $user);
-			return $house->sendMessage("{$house->getName()} heeft nu {$house->getResidents()->count()} {{$house->getResidentsPlural('bewoner', 'bewoners')}}: {$house->getResidentsString()}.");
+			return $house->sendMessage("{$house->getName()} heeft nu {$house->getResidents()->count()} {$house->getResidentsPlural('bewoner', 'bewoners')}: {$house->getResidentsString()}.");
 		} else {
 			$resident = $this->em->getRepository(Resident::class)->findByUser($user);
 			if (!$resident) {
