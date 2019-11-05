@@ -21,6 +21,7 @@ class NewchatmembersCommand extends SystemCommand {
 	protected $description = 'New Chat Members';
 	protected $version = '1.2.0';
 	protected $show_in_help = false;
+	protected $usage = '/newchatmembers';
 	private $em;
 
 	public function __construct(Telegram $telegram, Update $update = null, EntityManagerInterface $em = null) {

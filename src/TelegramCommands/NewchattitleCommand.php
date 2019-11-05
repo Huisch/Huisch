@@ -20,6 +20,7 @@ class NewchattitleCommand extends SystemCommand {
 	protected $description = 'New Chat Title';
 	protected $version = '1.2.0';
 	protected $show_in_help = false;
+	protected $usage = '/newchattitle';
 	private $em;
 
 	public function __construct(Telegram $telegram, Update $update = null, EntityManagerInterface $em = null) {

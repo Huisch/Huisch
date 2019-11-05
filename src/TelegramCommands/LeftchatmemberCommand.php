@@ -20,6 +20,7 @@ class LeftchatmemberCommand extends SystemCommand {
 	protected $name = 'leftchatmember';
 	protected $description = 'Left Chat Member';
 	protected $version = '1.2.0';
+	protected $usage = '/leftchatmember';
 	protected $show_in_help = false;
 	private $em;
 
@@ -39,7 +40,6 @@ class LeftchatmemberCommand extends SystemCommand {
 		$message = $this->getMessage();
 		$chat = $message->getChat();
 		$member = $message->getLeftChatMember();
-		throw new InternalHuischException("That went wrong");
 
 		if (!$member->getIsBot()) {
 			$house = $this->em->getRepository(House::class)->findByChat($chat);
