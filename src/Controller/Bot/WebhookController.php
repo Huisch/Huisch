@@ -32,6 +32,7 @@ class WebhookController extends AbstractController {
 			$telegram = new HuischTelegram($key, $username, $em);
 			$telegram->addCommandsPath($kernel->getProjectDir() . "/src/TelegramCommands");
 
+			$telegram->enableLimiter();
 			$result = $telegram->handle();
 			return $this->json($result);
 		} catch (TelegramException $e) {

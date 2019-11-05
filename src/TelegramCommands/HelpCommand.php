@@ -14,25 +14,10 @@ use Longman\TelegramBot\Request;
  */
 class HelpCommand extends UserCommand implements HuischCommandInterface
 {
-    /**
-     * @var string
-     */
     protected $name = 'help';
-
-    /**
-     * @var string
-     */
     protected $description = 'Toont mogelijke commando\'s';
-
-    /**
-     * @var string
-     */
     protected $usage = '/help or /help <command>';
-
-    /**
-     * @var string
-     */
-    protected $version = '1.3.0';
+    protected $version = '1.4.0';
 
     /**
      * @inheritdoc
@@ -79,11 +64,10 @@ class HelpCommand extends UserCommand implements HuischCommandInterface
         if (isset($all_commands[$command_str]) && ($safe_to_show || !$all_commands[$command_str]->isAdminCommand()) && (!$all_commands[$command_str] instanceof HuischCommandInterface || $all_commands[$command_str]->showWhen($isGroup))) {
             $command      = $all_commands[$command_str];
             $data['text'] = sprintf(
-                'Commando: %s (v%s)' . PHP_EOL .
+                'Commando: %s' . PHP_EOL .
                 'Beschrijving: %s' . PHP_EOL .
                 'Gebruik: %s',
                 $command->getName(),
-                $command->getVersion(),
                 $command->getDescription(),
                 $command->getUsage()
             );

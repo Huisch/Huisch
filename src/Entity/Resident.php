@@ -40,6 +40,11 @@ class Resident {
 	private $house;
 
 	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $deleted = false;
+
+	/**
 	 * Resident constructor.
 	 * @param $telegramID
 	 * @param $firstName
@@ -97,6 +102,16 @@ class Resident {
 		return $this;
 	}
 
+	public function isDeleted(): ?bool {
+		return $this->deleted;
+	}
+
+	public function setDeleted(bool $deleted): self {
+		$this->deleted = $deleted;
+
+		return $this;
+	}
+
 	/**
 	 * @param $text
 	 * @return ServerResponse
@@ -111,5 +126,13 @@ class Resident {
 
 	public function getName() {
 		return $this->getFirstName();
+	}
+
+	/**
+	 * @throws TelegramException
+	 */
+	public function delete() {
+		$this->setDeleted(true);
+		$this->sendMessage("Je bent niet langer bewoner van {$this->getHouse()->getName()}.");
 	}
 }

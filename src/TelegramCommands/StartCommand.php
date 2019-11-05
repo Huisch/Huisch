@@ -21,6 +21,7 @@ class StartCommand extends SystemCommand implements HuischCommandInterface {
 	protected $description = 'Start command';
 	protected $usage = '/start';
 	protected $version = '1.1.0';
+	protected $show_in_help = true;
 	private $em;
 
 	public function __construct(Telegram $telegram, Update $update = null, EntityManagerInterface $em = null) {

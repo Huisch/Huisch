@@ -36,13 +36,16 @@ class ResidentRepository extends ServiceEntityRepository {
 			return $resident->getTelegramID() === $user->getId();
 		});
 		if ($foundResidents->count() > 0) {
-			return $foundResidents->first();
+			/** @var Resident $resident */
+			$resident = $foundResidents->first();
+			if ($resident->isDeleted()) {
+				$resident->setDeleted(false);
+				$this->confirmEntry($house, $resident);
+			}
+			return $resident;
 		} else {
 			$resident = $this->createFromUser($house, $user);
-			$resident->sendMessage("Gefeliciteerd! Je bent nu een bewoner van {$house->getName()}.");
-			if ($this->count(['telegramID' => $resident->getTelegramID()]) > 1) {
-				$resident->sendMessage("Let op. Omdat je in meerdere huizen zit, zullen sommige functies niet optimaal werken.");
-			}
+			$this->confirmEntry($house, $resident);
 			return $resident;
 		}
 	}
@@ -54,7 +57,7 @@ class ResidentRepository extends ServiceEntityRepository {
 	 */
 	public function findByUser(user $user) {
 		if ($user->getIsBot()) throw new InternalHuischException("User is a bot");
-		$resident = $this->findOneBy(['telegramID' => $user->getId()]);
+		$resident = $this->findOneBy(['telegramID' => $user->getId(), 'deleted' => false]);
 		return $resident;
 	}
 
@@ -73,5 +76,17 @@ class ResidentRepository extends ServiceEntityRepository {
 		$entityManager->persist($resident);
 		$entityManager->flush();
 		return $resident;
+	}
+
+	/**
+	 * @param House $house
+	 * @param Resident $resident
+	 * @throws TelegramException
+	 */
+	private function confirmEntry(House $house, Resident $resident): void {
+		$resident->sendMessage("Gefeliciteerd! Je bent nu een bewoner van {$house->getName()}.");
+		if ($this->count(['telegramID' => $resident->getTelegramID(), 'deleted' => false]) > 1) {
+			$resident->sendMessage("Let op. Omdat je in meerdere huizen zit, zullen sommige functies niet optimaal werken.");
+		}
 	}
 }

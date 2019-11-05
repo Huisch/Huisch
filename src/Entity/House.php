@@ -72,6 +72,15 @@ class House {
 		return $this->residents;
 	}
 
+	/**
+	 * @return Collection|Resident[]
+	 */
+	public function getActiveResidents(): Collection {
+		return $this->residents->filter(function(Resident $r) {
+			return !$r->isDeleted();
+		});
+	}
+
 	public function addResident(Resident $resident): self {
 		if (!$this->residents->contains($resident)) {
 			$this->residents[] = $resident;
@@ -106,7 +115,7 @@ class House {
 	}
 
 	public function getResidentsPlural($singular, $plural) {
-		if ($this->getResidents()->count() === 1) {
+		if ($this->getActiveResidents()->count() === 1) {
 			return $singular;
 		} else {
 			return $plural;
@@ -114,7 +123,7 @@ class House {
 	}
 
 	public function getResidentsString() {
-		$residents = $this->getResidents()->map(function(Resident $r) { return $r->getName(); });
+		$residents = $this->getActiveResidents()->map(function(Resident $r) { return $r->getName(); });
 		if ($residents->count() > 1) {
 			$residents = $residents->toArray();
 			$begin = array_slice($residents, 0, -1);
