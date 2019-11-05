@@ -5,6 +5,7 @@ namespace App\Controller\Bot;
 use App\HuischTelegram;
 use Doctrine\ORM\EntityManagerInterface;
 use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Request;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,6 +34,7 @@ class WebhookController extends AbstractController {
 			$telegram->addCommandsPath($kernel->getProjectDir() . "/src/TelegramCommands");
 
 			$telegram->enableLimiter();
+			$logger->info('Got input ' . Request::getInput());
 			$result = $telegram->handle();
 			return $this->json($result);
 		} catch (TelegramException $e) {
