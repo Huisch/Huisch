@@ -39,10 +39,9 @@ class LeftchatmemberCommand extends SystemCommand {
 		$message = $this->getMessage();
 		$chat = $message->getChat();
 		$member = $message->getLeftChatMember();
-		$this->replyToUser("Doei.");
+		throw new InternalHuischException("That went wrong");
 
 		if (!$member->getIsBot()) {
-			$this->replyToUser("Je gaat weg.");
 			$house = $this->em->getRepository(House::class)->findByChat($chat);
 			/** @var Resident $resident */
 			$resident = $this->em->getRepository(Resident::class)->findByHouseAndUser($house, $member);
